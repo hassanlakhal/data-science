@@ -1,6 +1,7 @@
 from load_image import ft_load
 import matplotlib.pyplot as plt
-import numpy as np 
+import numpy as np
+import sys 
 
 def rgb2gray(rgb):
     return np.dot(rgb,[0.299, 0.587, 0.144])
@@ -11,7 +12,7 @@ def main():
         img = ft_load("animal.jpeg")
         img2gray = rgb2gray(img)
         print(img)
-        
+
         h, w = np.shape(img2gray)
         zw, zh = 400, 400
         eh = round((h  - zh) // 2)
@@ -28,4 +29,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('Interrupted')
+        sys.exit(130)
