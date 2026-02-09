@@ -36,7 +36,11 @@ def main():
     x = data[year + '_income'].apply(parse_value)
     y = data[year + '_life']
     print(x,y)
+
     plt.scatter(x, y)
+    plt.xscale('log')
+    plt.xticks([300, 1000, 10000], ['300', '1k', '10k'])
+
     plt.title(year)
     plt.xlabel("Gross domestic product")
     plt.ylabel("Life Expectancy")
