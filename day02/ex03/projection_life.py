@@ -1,27 +1,45 @@
-from load_csv import load
-import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
+from load_csv import load
+
+def parse_value(val):
+    """
+    Converts strings like '1.2k' to 1200.0 and handles numeric types.
+    """
+    if isinstance(val, str):
+        val = val.lower()
+        if 'k' in val:
+            return float(val.replace('k', '')) * 1e3
+        if 'm' in val:
+            return float(val.replace('m', '')) * 1e6
+        return float(val)
+    return float(val)
+
+
 def main():
-    df_1 = load('income_per_person_gdppercapita_ppp_inflation_adjusted.csv')
-    df_2 = load('life_expectancy_years.csv')
+    """
+    Loads GDP and Life Expectancy data, filters for the year 1900,
+    and displays a scatter plot with a logarithmic scale.
+    """
+    df_income = load("income_per_person_gdppercapita_ppp_inflation_adjusted.csv")
+    df_life = load("life_expectancy_years.csv")
 
 
-    df_1 = df_1.set_index("country")
-    df_2 = df_2.set_index("country")
+    if df_income is None or df_life is None:
+        return 
 
-    data_1 = df_1["1900"]
-    data_2 = df_2["1900"]
-    # frames = [data_1.values, data_2.values]
+    year = "1900"
+    income_1900 = df_income[['country',year]].set_index('country')
+    life_1900 = df_life[['country', year]].set_index('country')
 
-    # result = pd.concat(frames)
+    data = income_1900.join(life_1900,lsuffix='_income', rsuffix='_life')
 
-    data_2 = np.nan_to_num(data_2 , nan=0)
-    print(data_1.values)
-    print("-------------------------")
-    print(data_2)
-    # print(result.shape)
-    plt.scatter(data_2, data_1)
+    x = data[year + '_income'].apply(parse_value)
+    y = data[year + '_life']
+    print(x,y)
+    plt.scatter(x, y)
+    plt.title(year)
+    plt.xlabel("Gross domestic product")
+    plt.ylabel("Life Expectancy")
     plt.show()
 
 
