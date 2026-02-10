@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from load_csv import load
+import sys
 
 def parse_value(val):
     """
@@ -31,7 +32,7 @@ def main():
     income_1900 = df_income[['country',year]].set_index('country')
     life_1900 = df_life[['country', year]].set_index('country')
 
-    data = income_1900.join(life_1900,lsuffix='_income', rsuffix='_life')
+    data = income_1900.join(life_1900,lsuffix='_income', rsuffix='_life').dropna()
 
     x = data[year + '_income'].apply(parse_value)
     y = data[year + '_life']
@@ -49,4 +50,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('Interrupted')
+        sys.exit(130)

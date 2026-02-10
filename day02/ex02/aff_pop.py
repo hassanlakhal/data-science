@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from load_csv import load
+import sys
 
 def convert_units(series):
     """
@@ -64,4 +65,8 @@ def main():
     plt.show()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('Interrupted')
+        sys.exit(130)
